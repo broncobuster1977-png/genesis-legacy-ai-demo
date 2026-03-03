@@ -1,0 +1,204 @@
+/* LEGACY AI GLOBAL STYLES - CORRECTED TO SPEC */
+/* Per Architecture Doc Section 4.1 */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Legacy AI Brand Theme Variables - FROM SPEC SECTION 4.1 */
+@layer base {
+  :root {
+    /* Legacy AI Brand Colors - Original Spec */
+    --legacy-navy: #1B3A5C;
+    --legacy-blue: #2E75B6;
+    --legacy-lightblue: #E8F0FE;
+    --legacy-darkgray: #333333;
+    --legacy-neutral: #F9FAFB;
+    
+    /* shadcn/ui compatible variables */
+    --background: 255 255 255;
+    --foreground: 51 51 51;
+    
+    --card: 255 255 255;
+    --card-foreground: 51 51 51;
+    
+    --popover: 255 255 255;
+    --popover-foreground: 51 51 51;
+    
+    --primary: 46 117 182;
+    --primary-foreground: 255 255 255;
+    
+    --secondary: 232 240 254;
+    --secondary-foreground: 27 58 92;
+    
+    --muted: 245 245 245;
+    --muted-foreground: 107 114 128;
+    
+    --accent: 232 240 254;
+    --accent-foreground: 27 58 92;
+    
+    --destructive: 204 0 0;
+    --destructive-foreground: 255 255 255;
+    
+    --border: 229 231 235;
+    --input: 229 231 235;
+    --ring: 46 117 182;
+    
+    --radius: 0.5rem;
+  }
+
+  body {
+    background-color: white;
+    color: var(--legacy-darkgray);
+    font-family: 'Inter', sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Legacy AI Utility Classes - Fix for Tailwind color utilities */
+@layer utilities {
+  /* Background colors */
+  .bg-legacy-navy { background-color: var(--legacy-navy); }
+  .bg-legacy-blue { background-color: var(--legacy-blue); }
+  .bg-legacy-lightblue { background-color: var(--legacy-lightblue); }
+  .bg-legacy-darkgray { background-color: var(--legacy-darkgray); }
+  .bg-legacy-medgray { background-color: #6B7280; }
+  .bg-legacy-lightgray { background-color: #E5E7EB; }
+  .bg-legacy-neutral { background-color: var(--legacy-neutral); }
+  .bg-legacy-green { background-color: #2E7D32; }
+  .bg-legacy-red { background-color: #CC0000; }
+  
+  /* Text colors */
+  .text-legacy-navy { color: var(--legacy-navy); }
+  .text-legacy-blue { color: var(--legacy-blue); }
+  .text-legacy-lightblue { color: var(--legacy-lightblue); }
+  .text-legacy-darkgray { color: var(--legacy-darkgray); }
+  .text-legacy-medgray { color: #6B7280; }
+  .text-legacy-lightgray { color: #E5E7EB; }
+  .text-legacy-neutral { color: var(--legacy-neutral); }
+  .text-legacy-green { color: #2E7D32; }
+  .text-legacy-red { color: #CC0000; }
+  
+  /* Border colors */
+  .border-legacy-navy { border-color: var(--legacy-navy); }
+  .border-legacy-blue { border-color: var(--legacy-blue); }
+  .border-legacy-lightblue { border-color: var(--legacy-lightblue); }
+  .border-legacy-darkgray { border-color: var(--legacy-darkgray); }
+  .border-legacy-medgray { border-color: #6B7280; }
+  .border-legacy-lightgray { border-color: #E5E7EB; }
+  .border-legacy-neutral { border-color: var(--legacy-neutral); }
+  .border-legacy-green { border-color: #2E7D32; }
+  .border-legacy-red { border-color: #CC0000; }
+  
+  /* Hover variants for commonly used classes */
+  .hover\:bg-legacy-blue\/90:hover { background-color: rgba(46, 117, 182, 0.9); }
+  .hover\:text-legacy-blue:hover { color: var(--legacy-blue); }
+  .hover\:bg-blue-800:hover { background-color: #1e40af; }
+}
+
+/* Legacy AI Components - Per Spec Section 4.3 */
+@layer components {
+  .legacy-logo {
+    font-weight: 700;
+    color: var(--legacy-navy);
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+  }
+  
+  .btn-legacy {
+    background: var(--legacy-blue);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-legacy:hover {
+    background: rgba(46, 117, 182, 0.9);
+  }
+  
+  .btn-legacy-outline {
+    border: 2px solid var(--legacy-blue);
+    color: var(--legacy-blue);
+    background: transparent;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-legacy-outline:hover {
+    background: var(--legacy-blue);
+    color: white;
+  }
+  
+  .card-legacy {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f3f4f6;
+    transition: box-shadow 0.2s ease;
+  }
+  
+  .card-legacy:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Background sections */
+  .section-padding {
+    padding: 6rem 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .section-padding {
+      padding: 4rem 1.5rem;
+    }
+  }
+}
+
+/* Typography Classes - Per Spec Section 4.2 */
+@layer utilities {
+  .text-display {
+    font-size: 3.5rem;
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .text-headline {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    font-weight: 600;
+  }
+
+  .text-body {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  .text-caption {
+    font-size: 1rem;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .text-display {
+      font-size: 2.5rem;
+    }
+    
+    .text-headline {
+      font-size: 2rem;
+    }
+    
+    .text-body {
+      font-size: 1rem;
+    }
+  }
+}

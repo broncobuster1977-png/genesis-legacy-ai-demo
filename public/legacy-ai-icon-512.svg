@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle with Forest Green -->
+  <circle cx="256" cy="256" r="256" fill="#2d5016"/>
+  
+  <!-- Shield Shape for Privacy/Trust - Larger and more detailed -->
+  <path d="M256 64L202 96C191 102 181 112 181 125V227C181 277 208 322 256 352C304 322 331 277 331 227V125C331 112 321 102 310 96L256 64Z" 
+        fill="#f5f5dc" stroke="#b87333" stroke-width="4"/>
+  
+  <!-- Inner shield detail -->
+  <path d="M256 88L218 112C212 115 208 120 208 126V197C208 231 227 262 256 281C285 262 304 231 304 197V126C304 120 300 115 294 112L256 88Z" 
+        fill="none" stroke="#36454f" stroke-width="1" opacity="0.2"/>
+  
+  <!-- "LA" Monogram - Larger and more refined -->
+  <text x="256" y="210" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="96" fill="#2d5016">LA</text>
+  
+  <!-- Subtitle "AI" smaller below -->
+  <text x="256" y="250" text-anchor="middle" font-family="Inter, sans-serif" font-weight="400" font-size="32" fill="#36454f" opacity="0.7">AI</text>
+  
+  <!-- Enhanced Circuit Pattern for AI -->
+  <g opacity="0.4" stroke="#b87333" stroke-width="2" fill="none">
+    <!-- Connection nodes around the shield -->
+    <circle cx="180" cy="380" r="4" fill="#b87333"/>
+    <circle cx="220" cy="380" r="4" fill="#b87333"/>
+    <circle cx="256" cy="380" r="4" fill="#b87333"/>
+    <circle cx="292" cy="380" r="4" fill="#b87333"/>
+    <circle cx="332" cy="380" r="4" fill="#b87333"/>
+    
+    <!-- Connection lines -->
+    <line x1="184" y1="380" x2="216" y2="380"/>
+    <line x1="224" y1="380" x2="252" y2="380"/>
+    <line x1="260" y1="380" x2="288" y2="380"/>
+    <line x1="296" y1="380" x2="328" y2="380"/>
+    
+    <!-- Vertical connections to suggest network -->
+    <line x1="220" y1="376" x2="220" y2="360" opacity="0.5"/>
+    <line x1="256" y1="376" x2="256" y2="360" opacity="0.5"/>
+    <line x1="292" y1="376" x2="292" y2="360" opacity="0.5"/>
+  </g>
+  
+  <!-- Outer glow effect -->
+  <circle cx="256" cy="256" r="250" fill="none" stroke="#b87333" stroke-width="1" opacity="0.1"/>
+</svg>

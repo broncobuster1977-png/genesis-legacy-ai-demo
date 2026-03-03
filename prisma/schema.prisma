@@ -1,0 +1,102 @@
+// LEGACY AI DATABASE SCHEMA
+// Atlas Technical Director - February 28, 2026
+// Production-ready Prisma schema for personal AI platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User accounts and authentication
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  
+  // Authentication  
+  password    String
+  emailVerified DateTime?
+  
+  // Soul File (encrypted blob)
+  soulFile    String?  // Encrypted JSON
+  soulFileUpdated DateTime?
+  
+  // User preferences
+  preferences Json?    // Theme, voice settings, etc.
+  
+  // Relationships
+  conversations Conversation[]
+  sessions     Session[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("users")
+}
+
+// NextAuth.js session management
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("sessions")
+}
+
+// Conversation sessions
+model Conversation {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Conversation metadata
+  title       String?
+  type        ConversationType @default(CHAT)
+  
+  // Messages (encrypted)
+  messages    String   // Encrypted JSON array
+  
+  // Context and state
+  contextWindow String? // Recent context for LLM
+  tokenUsage  Int      @default(0)
+  
+  // Voice session data
+  voiceRoomId String?  // LiveKit room identifier
+  voiceActive Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("conversations")
+}
+
+enum ConversationType {
+  ONBOARDING
+  CHAT  
+  VOICE
+}
+
+// Analytics and monitoring (future expansion)
+model Usage {
+  id            String   @id @default(cuid())
+  userId        String
+  
+  // Token tracking
+  inputTokens   Int      @default(0)
+  outputTokens  Int      @default(0)
+  totalCost     Float    @default(0)
+  
+  // Activity tracking
+  conversationId String?
+  feature       String   // "chat", "onboarding", "voice"
+  
+  createdAt     DateTime @default(now())
+  
+  @@map("usage")
+}

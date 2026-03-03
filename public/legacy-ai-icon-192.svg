@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle with Forest Green -->
+  <circle cx="96" cy="96" r="96" fill="#2d5016"/>
+  
+  <!-- Shield Shape for Privacy/Trust -->
+  <path d="M96 24L76 36C72 38 68 42 68 47V85C68 104 78 121 96 132C114 121 124 104 124 85V47C124 42 120 38 116 36L96 24Z" 
+        fill="#f5f5dc" stroke="#b87333" stroke-width="2"/>
+  
+  <!-- "LA" Monogram -->
+  <text x="96" y="88" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="36" fill="#2d5016">LA</text>
+  
+  <!-- Subtle Circuit Pattern for AI -->
+  <g opacity="0.3" stroke="#b87333" stroke-width="1" fill="none">
+    <!-- Connection dots -->
+    <circle cx="76" cy="140" r="2" fill="#b87333"/>
+    <circle cx="96" cy="140" r="2" fill="#b87333"/>
+    <circle cx="116" cy="140" r="2" fill="#b87333"/>
+    <!-- Connection lines -->
+    <line x1="78" y1="140" x2="94" y2="140"/>
+    <line x1="98" y1="140" x2="114" y2="140"/>
+  </g>
+</svg>
