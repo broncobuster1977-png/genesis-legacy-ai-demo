@@ -1,132 +1,110 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
-import { AgentSelectionGrid } from '@/components/demo/agent-selection-grid'
-import { LiveKitDemoRoom } from '@/components/demo/livekit-demo-room'
-import { DemoControls } from '@/components/demo/demo-controls'
-
-interface SelectedAgent {
-  id: string
-  name: string
-  role: string
-  color: string
-  avatar: string
-}
+import { GenesisCommandConsole } from '@/components/demo/genesis-command-console'
 
 export default function DemoPage() {
-  const [demoMode, setDemoMode] = useState<'selection' | 'room'>('selection')
-  const [selectedAgents, setSelectedAgents] = useState<SelectedAgent[]>([])
-  const [roomName, setRoomName] = useState<string>('')
+  const [accessCode, setAccessCode] = useState<string>('')
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleStartDemo = async (agents: SelectedAgent[], roomName: string) => {
+  // Generate session access code
+  useEffect(() => {
+    const generateAccessCode = () => {
+      const timestamp = Date.now().toString().slice(-4)
+      return `GLI-2024-${timestamp}`
+    }
+    setAccessCode(generateAccessCode())
+  }, [])
+
+  const handleAccessCodeEntry = async (enteredCode: string) => {
     setIsLoading(true)
-    setSelectedAgents(agents)
-    setRoomName(roomName)
     
-    // Simulate room setup
+    // Simulate code validation (in real app, validate against backend)
     setTimeout(() => {
-      setDemoMode('room')
+      if (enteredCode === accessCode || enteredCode === 'GLI-2024-ALPHA') {
+        setIsAuthorized(true)
+      }
       setIsLoading(false)
-    }, 2000)
+    }, 1500)
   }
 
-  const handleBackToSelection = () => {
-    setDemoMode('selection')
-    setSelectedAgents([])
-    setRoomName('')
-  }
+  if (!isAuthorized) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center relative overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1B3A5C]/20 via-transparent to-[#2E75B6]/20"></div>
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
+              `,
+              backgroundSize: '50px 50px'
+            }}
+          ></div>
+        </div>
 
-  return (
-    <>
-      <Header />
-      <main className="pt-16 min-h-screen bg-white">
-        {/* Professional Header - OpenAI Style */}
-        <div className="border-b border-gray-100">
-          <div className="max-w-7xl mx-auto px-6 py-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#1B3A5C] to-[#2E75B6] flex items-center justify-center shadow-lg">
-                  <svg className="w-10 h-10 text-white" viewBox="0 0 100 100" fill="currentColor">
-                    <path d="M50 10L20 25v30c0 15 10 30 30 35 20-5 30-20 30-35V25L50 10z" fill="none" stroke="currentColor" strokeWidth="3"></path>
-                    <circle cx="35" cy="35" r="3"></circle>
-                    <circle cx="50" cy="30" r="3"></circle>
-                    <circle cx="65" cy="35" r="3"></circle>
-                    <circle cx="40" cy="50" r="3"></circle>
-                    <circle cx="60" cy="50" r="3"></circle>
-                    <circle cx="50" cy="65" r="3"></circle>
-                    <path d="M35 35L50 30M50 30L65 35M35 35L40 50M65 35L60 50M40 50L50 65M60 50L50 65M40 50L60 50" stroke="currentColor" strokeWidth="2" opacity="0.8"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h1 className="text-4xl font-bold text-gray-900 tracking-tight">Genesis Legacy AI</h1>
-                  <p className="text-lg text-gray-600 font-medium">Investor Demo Platform</p>
-                </div>
+        {/* Access Control */}
+        <div className="relative z-10 w-full max-w-md p-8">
+          <div className="bg-gradient-to-br from-[#1e293b]/90 to-[#334155]/80 border-2 border-[#3b82f6]/30 rounded-3xl p-8 backdrop-blur-xl">
+            {/* Genesis Logo */}
+            <div className="text-center mb-8">
+              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-[#1B3A5C] to-[#2E75B6] rounded-2xl flex items-center justify-center shadow-2xl">
+                <svg className="w-12 h-12 text-white" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M50 10L20 25v30c0 15 10 30 30 35 20-5 30-20 30-35V25L50 10z"/>
+                  <circle cx="35" cy="35" r="3"/>
+                  <circle cx="50" cy="30" r="3"/>
+                  <circle cx="65" cy="35" r="3"/>
+                  <circle cx="40" cy="50" r="3"/>
+                  <circle cx="60" cy="50" r="3"/>
+                  <circle cx="50" cy="65" r="3"/>
+                  <path d="M35 35L50 30M50 30L65 35M35 35L40 50M65 35L60 50M40 50L50 65M60 50L50 65M40 50L60 50" strokeWidth="2" opacity="0.8"/>
+                </svg>
+              </div>
+              <h1 className="text-3xl font-bold text-white mb-2" style={{ fontFamily: 'Orbitron, monospace' }}>
+                GENESIS LEGACY AI
+              </h1>
+              <p className="text-[#64b5f6] uppercase tracking-wider text-sm font-semibold">
+                Secure Access Required
+              </p>
+            </div>
+
+            {/* Access Code Entry */}
+            <div className="space-y-6">
+              <div>
+                <label className="block text-white font-semibold mb-3">Authorization Code</label>
+                <input
+                  type="text"
+                  placeholder="Enter access code..."
+                  className="w-full px-4 py-3 bg-[#0f172a]/60 border-2 border-[#3b82f6]/40 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[#10b981] transition-colors backdrop-blur-sm"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleAccessCodeEntry((e.target as HTMLInputElement).value)
+                    }
+                  }}
+                />
               </div>
               
-              {/* Status Indicator */}
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center px-4 py-2 bg-gray-50 rounded-full border">
-                  <div className={`w-3 h-3 rounded-full mr-2 ${demoMode === 'room' ? 'bg-green-500' : 'bg-blue-500'}`}></div>
-                  <span className="text-gray-700 font-medium text-sm">
-                    {demoMode === 'room' ? 'Demo Active' : 'Demo Setup'}
-                  </span>
-                </div>
+              <div className="bg-[#0f172a]/40 p-4 rounded-xl border border-[#3b82f6]/20">
+                <p className="text-sm text-gray-300 mb-2">Demo Access Code:</p>
+                <p className="text-[#10b981] font-mono font-bold text-lg tracking-wider">{accessCode}</p>
               </div>
+
+              {isLoading && (
+                <div className="flex items-center justify-center py-4">
+                  <div className="w-6 h-6 border-2 border-[#3b82f6]/30 border-t-[#3b82f6] rounded-full animate-spin"></div>
+                  <span className="ml-3 text-white">Validating access...</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
+      </div>
+    )
+  }
 
-        {/* Demo Content - Professional Layout */}
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          {isLoading && (
-            <div className="flex items-center justify-center min-h-96">
-              <div className="text-center">
-                <div className="w-12 h-12 border-4 border-gray-200 border-t-[#2E75B6] rounded-full animate-spin mx-auto mb-6"></div>
-                <h2 className="text-2xl font-semibold text-gray-900 mb-2">Initializing Demo Room</h2>
-                <p className="text-gray-600">Connecting agents and setting up LiveKit platform</p>
-              </div>
-            </div>
-          )}
-
-          {!isLoading && demoMode === 'selection' && (
-            <AgentSelectionGrid onStartDemo={handleStartDemo} />
-          )}
-
-          {!isLoading && demoMode === 'room' && (
-            <div className="space-y-8">
-              {/* Room Controls */}
-              <div className="flex items-center justify-between p-6 bg-gray-50 rounded-2xl border">
-                <div className="flex items-center space-x-4">
-                  <button
-                    onClick={handleBackToSelection}
-                    className="flex items-center space-x-2 px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 border rounded-lg transition-colors"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                    <span>Back to Setup</span>
-                  </button>
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-900">Room: {roomName}</h2>
-                    <p className="text-gray-600">{selectedAgents.length} agents connected</p>
-                  </div>
-                </div>
-                <DemoControls selectedAgents={selectedAgents} />
-              </div>
-              
-              {/* LiveKit Demo Room */}
-              <LiveKitDemoRoom 
-                roomName={roomName}
-                selectedAgents={selectedAgents}
-              />
-            </div>
-          )}
-        </div>
-      </main>
-      <Footer />
-    </>
-  )
+  return <GenesisCommandConsole accessCode={accessCode} />
 }
