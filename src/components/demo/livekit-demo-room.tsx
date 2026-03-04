@@ -267,34 +267,50 @@ export function LiveKitDemoRoom({ roomName, selectedAgents }: LiveKitDemoRoomPro
     )
   }
 
+  // All agents from your sketch (expanded to match all agents)
+  const allAgents = [
+    { id: 'vic', name: 'VIC', role: 'Financial Director', color: '#F59E0B' },
+    { id: 'scout', name: 'SCOUT', role: 'Research & Intelligence', color: '#10B981' },
+    { id: 'demi-voss', name: 'DEMI', role: 'Creative Director', color: '#4A90E2' },
+    { id: 'penny-marsh', name: 'PENNY', role: 'Operations Director', color: '#8B5CF6' },
+    { id: 'atlas', name: 'ATLAS', role: 'Technical Director', color: '#2E75B6' },
+    { id: 'sean-archer', name: 'V.CHASE', role: 'Legal Counsel', color: '#6B7280' },
+    { id: 'eddie-park', name: 'EDDIE', role: 'Marketing Director', color: '#EF4444' },
+    { id: 'jarvis', name: 'JARVIS', role: 'CEO / Strategic Director', color: '#1B3A5C' },
+    { id: 'phoenix', name: 'PHOENIX', role: 'Recovery Specialist', color: '#DC2626' }
+  ]
+
+  const agentParticipants = participants.filter(p => p.isAgent)
+  const guestParticipants = participants.filter(p => !p.isAgent)
+
   return (
     <div className="space-y-6">
       {/* Room Stats Bar */}
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+      <div className="p-4 bg-gray-50 rounded-2xl border">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-8">
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-              <span className="text-white font-medium">Live</span>
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span className="text-gray-900 font-medium">Live Demo</span>
             </div>
-            <div className="text-white/80">
-              Duration: <span className="font-mono">{roomStats.duration}</span>
+            <div className="text-gray-600">
+              Duration: <span className="font-mono font-semibold text-gray-900">{roomStats.duration}</span>
             </div>
-            <div className="text-white/80">
-              Participants: {roomStats.participants}
+            <div className="text-gray-600">
+              Total Participants: <span className="font-semibold text-gray-900">{roomStats.participants}</span>
             </div>
-            <div className="text-white/80">
-              Agents: {roomStats.agents}
+            <div className="text-gray-600">
+              Active Agents: <span className="font-semibold text-gray-900">{roomStats.agents}</span>
             </div>
           </div>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
             <button
               onClick={toggleScreenShare}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 screenSharing 
                   ? 'bg-green-500 text-white' 
-                  : 'bg-white/20 text-white hover:bg-white/30'
+                  : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
               }`}
             >
               {screenSharing ? 'Stop Sharing' : 'Share Screen'}
@@ -303,98 +319,180 @@ export function LiveKitDemoRoom({ roomName, selectedAgents }: LiveKitDemoRoomPro
         </div>
       </div>
 
-      {/* Video Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {participants.map((participant) => (
-          <div
-            key={participant.id}
-            className={`
-              relative aspect-video bg-gray-900 rounded-xl overflow-hidden border-2 transition-all duration-300
-              ${participant.isSpeaking ? 'border-green-400 shadow-lg shadow-green-400/25' : 'border-white/20'}
-            `}
-          >
-            {/* Video Feed */}
-            <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-              {participant.videoElement ? (
-                <video
-                  ref={(el) => {
-                    if (el && participant.videoElement) {
-                      el.srcObject = participant.videoElement.srcObject
-                    }
-                  }}
-                  autoPlay
-                  playsInline
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div 
-                  className="w-16 h-16 rounded-full flex items-center justify-center text-white text-xl font-bold"
-                  style={{ backgroundColor: participant.color }}
-                >
-                  {participant.name.charAt(0)}
+      {/* YOUR SKETCH LAYOUT - Top: Agent Lineup */}
+      <div className="p-6 bg-white rounded-2xl border shadow-sm">
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 mb-1">Agent Lineup</h3>
+          <p className="text-gray-600 text-sm">Genesis Legacy AI Agent Council</p>
+        </div>
+        
+        <div className="grid grid-cols-4 lg:grid-cols-7 xl:grid-cols-9 gap-4">
+          {allAgents.map((agent) => {
+            const isSelected = selectedAgents.some(sa => sa.id === agent.id)
+            const isConnected = agentParticipants.some(ap => ap.id === agent.id)
+            const isSpeaking = currentSpeaker === agent.id
+            
+            return (
+              <div
+                key={agent.id}
+                className={`
+                  relative p-4 rounded-2xl border-2 transition-all duration-300
+                  ${isConnected 
+                    ? 'bg-green-50 border-green-300 shadow-sm' 
+                    : isSelected 
+                    ? 'bg-blue-50 border-blue-300' 
+                    : 'bg-gray-50 border-gray-200'
+                  }
+                  ${isSpeaking ? 'ring-2 ring-green-400 shadow-lg' : ''}
+                `}
+              >
+                {/* Status Indicator */}
+                <div className="absolute top-2 right-2">
+                  <div className={`w-3 h-3 rounded-full ${
+                    isConnected ? 'bg-green-500' : 
+                    isSelected ? 'bg-blue-500' : 'bg-gray-400'
+                  }`}></div>
+                </div>
+
+                {/* Agent Avatar */}
+                <div className="text-center">
+                  <div 
+                    className="w-12 h-12 rounded-xl mx-auto mb-2 flex items-center justify-center text-white text-sm font-bold shadow-sm"
+                    style={{ backgroundColor: agent.color }}
+                  >
+                    {agent.name.charAt(0)}
+                  </div>
+                  <div className="text-xs font-semibold text-gray-900 truncate">{agent.name}</div>
+                  <div className="text-xs text-gray-500 truncate mt-1">{agent.role}</div>
+                </div>
+
+                {/* Speaking Animation */}
+                {isSpeaking && (
+                  <div className="absolute inset-0 rounded-2xl bg-green-400/10 animate-pulse"></div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Center: Large Presentation Area */}
+      <div className="p-8 bg-white rounded-2xl border shadow-sm min-h-96">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-1">Presentation Board</h3>
+            <p className="text-gray-600">Main demo presentation area</p>
+          </div>
+          
+          <div className="flex items-center space-x-3">
+            <div className="px-3 py-1 bg-green-50 text-green-700 text-sm font-medium rounded-full border border-green-200">
+              Present
+            </div>
+            <div className="px-3 py-1 bg-gray-50 text-gray-500 text-sm font-medium rounded-full border border-gray-200">
+              Not Present: {allAgents.length - selectedAgents.length}
+            </div>
+          </div>
+        </div>
+
+        {/* Main Presentation Content */}
+        <div className="h-80 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center">
+          {screenSharing ? (
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v8a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2v4h10V6H5z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <h4 className="text-lg font-semibold text-gray-900 mb-2">Screen Share Active</h4>
+              <p className="text-gray-600">Presentation content is being shared with all participants</p>
+            </div>
+          ) : (
+            <div className="text-center max-w-md">
+              <div className="w-16 h-16 bg-[#1B3A5C] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-white" viewBox="0 0 100 100" fill="currentColor">
+                  <path d="M50 10L20 25v30c0 15 10 30 30 35 20-5 30-20 30-35V25L50 10z" fill="none" stroke="currentColor" strokeWidth="3"></path>
+                  <circle cx="35" cy="35" r="3"></circle>
+                  <circle cx="50" cy="30" r="3"></circle>
+                  <circle cx="65" cy="35" r="3"></circle>
+                </svg>
+              </div>
+              <h4 className="text-lg font-semibold text-gray-900 mb-2">Genesis Legacy AI Demo</h4>
+              <p className="text-gray-600">Click "Share Screen" to begin your investor presentation</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Bottom: Guest Participants Grid */}
+      <div className="p-6 bg-white rounded-2xl border shadow-sm">
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 mb-1">Guest Participants</h3>
+          <p className="text-gray-600 text-sm">Investors and stakeholders</p>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {guestParticipants.map((guest) => (
+            <div
+              key={guest.id}
+              className={`
+                relative aspect-square bg-gray-100 rounded-2xl overflow-hidden border-2 transition-all duration-300
+                ${guest.isSpeaking ? 'border-green-400 shadow-lg shadow-green-400/25' : 'border-gray-200'}
+              `}
+            >
+              {/* Video Feed */}
+              <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                {guest.videoElement ? (
+                  <video
+                    ref={(el) => {
+                      if (el && guest.videoElement) {
+                        el.srcObject = guest.videoElement.srcObject
+                      }
+                    }}
+                    autoPlay
+                    playsInline
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div 
+                    className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-700 text-lg font-bold shadow-sm"
+                  >
+                    {guest.name.charAt(0)}
+                  </div>
+                )}
+              </div>
+
+              {/* Guest Info */}
+              <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm p-2">
+                <p className="text-gray-900 font-medium text-xs truncate">{guest.name}</p>
+                <p className="text-gray-500 text-xs truncate">{guest.role || 'Guest'}</p>
+              </div>
+
+              {/* Speaking Indicator */}
+              {guest.isSpeaking && (
+                <div className="absolute top-2 right-2">
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
                 </div>
               )}
             </div>
+          ))}
 
-            {/* Participant Info Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 bg-black/60 backdrop-blur-sm p-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white font-semibold text-sm">{participant.name}</p>
-                  {participant.role && (
-                    <p className="text-white/60 text-xs">{participant.role}</p>
-                  )}
+          {/* Empty Guest Slots */}
+          {Array.from({ length: Math.max(0, 6 - guestParticipants.length) }).map((_, index) => (
+            <div
+              key={`guest-empty-${index}`}
+              className="aspect-square bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 flex items-center justify-center"
+            >
+              <div className="text-center">
+                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                  </svg>
                 </div>
-                
-                <div className="flex items-center space-x-2">
-                  {/* Audio Status */}
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                    participant.audioEnabled ? 'bg-green-500' : 'bg-red-500'
-                  }`}>
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      {participant.audioEnabled ? (
-                        <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.777L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.797-3.777a1 1 0 011.617.453zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0118 10a9.972 9.972 0 01-1.929 5.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0016 10c0-1.636-.491-3.157-1.343-4.414a1 1 0 010-1.414zM12.829 5.172a1 1 0 011.414 0A5.983 5.983 0 0116 10a5.983 5.983 0 01-1.757 4.828 1 1 0 01-1.414-1.414A3.983 3.983 0 0014 10a3.983 3.983 0 00-1.171-2.828 1 1 0 010-1.414z" clipRule="evenodd" />
-                      ) : (
-                        <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.777L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.797-3.777a1 1 0 011.617.453zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                      )}
-                    </svg>
-                  </div>
-                  
-                  {/* Agent Badge */}
-                  {participant.isAgent && (
-                    <div className="px-2 py-1 bg-blue-500 text-white text-xs rounded-full font-medium">
-                      AI
-                    </div>
-                  )}
-                </div>
+                <p className="text-gray-400 text-xs">Guest Slot</p>
               </div>
             </div>
-
-            {/* Speaking Indicator */}
-            {participant.isSpeaking && (
-              <div className="absolute top-2 right-2">
-                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-              </div>
-            )}
-          </div>
-        ))}
-
-        {/* Empty slots for additional participants */}
-        {Array.from({ length: Math.max(0, 8 - participants.length) }).map((_, index) => (
-          <div
-            key={`empty-${index}`}
-            className="aspect-video bg-white/5 rounded-xl border-2 border-dashed border-white/20 flex items-center justify-center"
-          >
-            <div className="text-center">
-              <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                <svg className="w-6 h-6 text-white/40" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <p className="text-white/40 text-sm">Available</p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   )
